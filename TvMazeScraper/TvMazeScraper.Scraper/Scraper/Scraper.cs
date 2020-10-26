@@ -25,7 +25,7 @@ namespace TvMazeScraper.Scraper
             //Get all shows
             var result = new List<Show>();
             var pageIndex = 1;
-            while (pageIndex < 5)
+            while (true)
             {
 
                 var shows = await _client.GetShowsAsync(pageIndex);

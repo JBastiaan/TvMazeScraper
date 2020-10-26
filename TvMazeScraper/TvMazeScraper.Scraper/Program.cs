@@ -16,10 +16,7 @@ namespace TvMazeScraper.Scraper
             var services = new ServiceCollection();
             services
                 .AddTransient<IScraper, Scraper>()
-                .AddAutoMapper(typeof(Program).Assembly);
-            
-            services
-                .AddPolicyHandler(TvMazeClient.GetRetryPolicy())
+                .AddAutoMapper(typeof(Program).Assembly)
                 .AddHttpClient(
                     nameof(TvMazeClient),
                     (s, cfg) =>
@@ -29,7 +26,6 @@ namespace TvMazeScraper.Scraper
                     })
                 .AddPolicyHandler(TvMazeClient.GetRetryPolicy())
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                
                 .AddTypedClient<ITvMazeClient, TvMazeClient>();
             
             var provider = services.BuildServiceProvider();

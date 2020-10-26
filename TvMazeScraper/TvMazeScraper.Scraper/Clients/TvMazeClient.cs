@@ -33,7 +33,6 @@ namespace TvMazeScraper.Scraper.Clients
             return httpResponse.StatusCode switch
             {
                 HttpStatusCode.NotFound => new List<Show>(),
-                HttpStatusCode.TooManyRequests => throw new TooManyRequestsException(),
                 _ => throw new ApiException()
             };
         }
