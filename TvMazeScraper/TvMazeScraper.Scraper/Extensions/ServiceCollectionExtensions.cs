@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Net.Mime;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TvMazeScraper.Persistance;
+using TvMazeScraper.Persistance.Extensions;
 using TvMazeScraper.Scraper.Clients;
 using TvMazeScraper.Scraper.Configuration;
-using TvMazeScraper.Scraper.Repositories;
 
 namespace TvMazeScraper.Scraper.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        private static TvMazeScraperConfiguration _configuration = new TvMazeScraperConfiguration();
+        private static readonly TvMazeScraperConfiguration Configuration = new TvMazeScraperConfiguration();
 
         public static IServiceCollection AddConfiguration(
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            configuration.Bind(_configuration);
+            configuration.Bind(Configuration);
 
-            services.AddSingleton(_configuration);
+            services.AddSingleton(Configuration);
 
             return services;
         }
@@ -30,30 +28,9 @@ namespace TvMazeScraper.Scraper.Extensions
         {
             services
                 .AddTransient<ITvMazeScraper, TvMazeScraper>()
-                .AddScraperContext()
+                .AddScraperContext(Configuration.ConnectionStrings.TvMazeScraperDb)
                 .AddScraperClient()
                 .AddRepositories();
-
-            return services;
-        }
-
-
-        private static IServiceCollection AddRepositories(
-            this IServiceCollection services)
-        {
-            services
-                .AddTransient<ITvMazeScraper, TvMazeScraper>()
-                .AddTransient<IActorRepository, ActorRepository>()
-                .AddTransient<IShowRepository, ShowRepository>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddScraperContext(
-            this IServiceCollection services)
-        {
-            services
-                .AddDbContext<TvMazeScraperContext>(options => options.UseSqlServer(_configuration.ConnectionStrings.TvMazeScraperDb));
 
             return services;
         }
@@ -66,7 +43,7 @@ namespace TvMazeScraper.Scraper.Extensions
                     nameof(TvMazeClient),
                     (s, cfg) =>
                     {
-                        cfg.BaseAddress = new Uri(_configuration.TvMazeScraperApi.BaseAddress);
+                        cfg.BaseAddress = new Uri(Configuration.TvMazeScraperApi.BaseAddress);
                         cfg.DefaultRequestHeaders.Accept.ParseAdd(MediaTypeNames.Application.Json);
                     })
                 .AddPolicyHandler(TvMazeClient.GetRetryPolicy())

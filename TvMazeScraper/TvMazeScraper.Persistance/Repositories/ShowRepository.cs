@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TvMazeScraper.Persistance;
 using TvMazeScraper.Persistance.Entities;
 
-namespace TvMazeScraper.Scraper.Repositories
+namespace TvMazeScraper.Persistance.Repositories
 {
     public class ShowRepository : IShowRepository
     {
+        private const int MaxPageSize = 250;
         private readonly TvMazeScraperContext _context;
 
         public ShowRepository(TvMazeScraperContext context)
@@ -29,8 +29,11 @@ namespace TvMazeScraper.Scraper.Repositories
         {
             return await _context
                 .Shows
-                .Skip(pageIndex * Constants.TvMazePageSize)
-                .Take(Constants.TvMazePageSize)
+                .Include(show => show.ShowActors)
+                .ThenInclude(sa => sa.Actor)
+                .Skip(pageIndex * MaxPageSize)
+                .Take(MaxPageSize)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -43,23 +46,7 @@ namespace TvMazeScraper.Scraper.Repositories
 
         public async Task<int> SaveChangesAsync()
         {
-            int affectedRows;
-            await _context.Database.OpenConnectionAsync();
-            try
-            {
-                //https://docs.microsoft.com/en-us/ef/core/saving/explicit-values-generated-properties#saving-an-explicit-value-during-add
-                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows ON");
-                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actors ON");
-                affectedRows = await _context.SaveChangesAsync();
-                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows OFF");
-                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actors OFF");
-            }
-            finally
-            {
-                await _context.Database.CloseConnectionAsync();
-            }
-
-            return affectedRows;
+            return await _context.SaveChangesAsync();
         }
     }
 }

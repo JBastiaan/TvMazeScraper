@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using TvMazeScraper.Persistance.Entities;
 
-namespace TvMazeScraper.Scraper.Repositories
+namespace TvMazeScraper.Persistance.Repositories
 {
     public interface IShowRepository
     {

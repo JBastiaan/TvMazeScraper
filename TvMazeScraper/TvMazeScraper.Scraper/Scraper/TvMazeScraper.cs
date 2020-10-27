@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using TvMazeScraper.Persistance.Entities;
+using TvMazeScraper.Persistance.Repositories;
 using TvMazeScraper.Scraper.Clients;
-using TvMazeScraper.Scraper.Repositories;
 using Show = TvMazeScraper.Persistance.Entities.Show;
 
 namespace TvMazeScraper.Scraper

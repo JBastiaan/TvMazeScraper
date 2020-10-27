@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Solution Items\docker-compose.yml = ..\Solution Items\docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvMazeScraper.Api", "TvMazeScraper.Api\TvMazeScraper.Api.csproj", "{A19A064C-F69F-477F-A397-B8050E8CA637}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{D3B6B117-BE4D-46AC-9B2D-537953CFF327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3B6B117-BE4D-46AC-9B2D-537953CFF327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3B6B117-BE4D-46AC-9B2D-537953CFF327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19A064C-F69F-477F-A397-B8050E8CA637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19A064C-F69F-477F-A397-B8050E8CA637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19A064C-F69F-477F-A397-B8050E8CA637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19A064C-F69F-477F-A397-B8050E8CA637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
