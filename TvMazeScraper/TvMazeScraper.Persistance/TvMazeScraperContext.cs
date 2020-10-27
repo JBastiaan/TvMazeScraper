@@ -5,6 +5,11 @@ namespace TvMazeScraper.Persistance
 {
     public class TvMazeScraperContext : DbContext
     {
+        public TvMazeScraperContext(DbContextOptions options)
+        : base(options)
+        {
+        }
+
         public DbSet<Show> Shows { get; set; }
         public DbSet<ShowActor> ShowActors { get; set; }
         public DbSet<Actor> Actors { get; set; }

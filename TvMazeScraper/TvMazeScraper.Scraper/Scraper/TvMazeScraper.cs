@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using TvMazeScraper.Persistance.Entities;
 using TvMazeScraper.Scraper.Clients;
 using TvMazeScraper.Scraper.Repositories;
@@ -15,17 +16,20 @@ namespace TvMazeScraper.Scraper
         private readonly IShowRepository _showRepository;
         private readonly IActorRepository _actorRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
         public TvMazeScraper(
             ITvMazeClient client,
             IShowRepository showRepository,
             IActorRepository actorRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILoggerFactory loggerFactory)
         {
             _client = client;
             _showRepository = showRepository;
             _actorRepository = actorRepository;
             _mapper = mapper;
+            _logger = loggerFactory.CreateLogger(nameof(TvMazeScraper));
         }
 
         /// <summary>
@@ -34,8 +38,9 @@ namespace TvMazeScraper.Scraper
         /// <returns></returns>
         public async Task ScrapeAsync()
         {
-            var lastKnownShow = await _showRepository.GetLatestShowIdAsync();
-            var pageIndex = lastKnownShow / Constants.TvMazePageSize;
+            var latestShowId = await GetLatestShowIdAsync();
+
+            var pageIndex = latestShowId / Constants.TvMazePageSize;
             if (pageIndex == 0)
             {
                 pageIndex++;
@@ -45,6 +50,7 @@ namespace TvMazeScraper.Scraper
             var personsToAdd = new List<Models.Person>();
             while (true)
             {
+                _logger.LogInformation($"Retrieving shows for page {pageIndex}");
                 var shows = await _client.GetShowsAsync(pageIndex);
 
                 if (!shows.Any())
@@ -54,19 +60,23 @@ namespace TvMazeScraper.Scraper
 
                 foreach (var show in shows)
                 {
-                    if (show.Id > lastKnownShow)
+                    if (show.Id > latestShowId)
                     {
+                        _logger.LogInformation($"Retrieving cast for show '{show.Name}'");
                         var cast = await _client.GetCastAsync(show.Id);
 
                         personsToAdd.AddRange(cast.Select(c => c.Person));
 
-                        show.Cast = cast;
+                        //1 actor can play as multiple characters
+                        show.Cast = cast.Select(actor => actor.Person).Distinct().ToList();
                         showsToAdd.Add(show);
                     }
                 }
 
                 pageIndex++;
             }
+
+            _logger.LogInformation("Persisting new shows...");
 
             await _showRepository
                 .AddShowsAsync(_mapper.Map<IEnumerable<Show>>(showsToAdd));
@@ -75,6 +85,15 @@ namespace TvMazeScraper.Scraper
                 .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct()));
 
             await _showRepository.SaveChangesAsync();
+        }
+
+        private async Task<int> GetLatestShowIdAsync()
+        {
+            _logger.LogInformation("Retrieving latest known showId");
+            var latestShowId = await _showRepository.GetLatestShowIdAsync();
+            _logger.LogInformation($"Latest known showId is {latestShowId}");
+
+            return latestShowId;
         }
     }
 }

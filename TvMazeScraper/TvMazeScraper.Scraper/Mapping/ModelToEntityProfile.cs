@@ -21,8 +21,6 @@ namespace TvMazeScraper.Scraper.Mapping
                 .ConvertUsing<ShowToShowActorsConverter>();
 
             CreateMap<Models.Person, Persistance.Entities.Actor>();
-
-            //.ConvertUsing<PersonToActorConverter>();
         }
     }
 
@@ -45,10 +43,10 @@ namespace TvMazeScraper.Scraper.Mapping
         {
             return source
                 .Cast
-                .Select(actor => new ShowActor
+                .Select(person => new ShowActor
                     {
                         ShowId = source.Id,
-                        ActorId = actor.Person.Id
+                        ActorId = person.Id
                     })
                 .ToList();
         }

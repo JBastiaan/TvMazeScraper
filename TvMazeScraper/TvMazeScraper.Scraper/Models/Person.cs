@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace TvMazeScraper.Scraper.Models
 {
 
-    public class Person : IEqualityComparer<Person>
+    public class Person : IEquatable<Person>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -18,6 +17,21 @@ namespace TvMazeScraper.Scraper.Models
         public int GetHashCode(Person obj)
         {
             return obj.Id.GetHashCode();
+        }
+
+        public bool Equals(Person other)
+        {
+            return Id == other?.Id ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals((Person) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

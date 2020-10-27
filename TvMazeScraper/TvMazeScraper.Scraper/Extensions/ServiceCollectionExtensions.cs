@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,19 +12,13 @@ namespace TvMazeScraper.Scraper.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        private static TvMazeScraperConfiguration _configuration;
+        private static TvMazeScraperConfiguration _configuration = new TvMazeScraperConfiguration();
 
         public static IServiceCollection AddConfiguration(
-            this IServiceCollection services)
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
-            var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-            var iConfig = configBuilder.Build();
-            _configuration = new TvMazeScraperConfiguration();
-
-            iConfig.Bind(_configuration);
+            configuration.Bind(_configuration);
 
             services.AddSingleton(_configuration);
 
