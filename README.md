@@ -13,3 +13,4 @@ This is a scraper for the TvMaze api http://api.tvmaze.com
 3. Run scraper console app
 4. Wait a long time.
 5. Run Api
+6. Start Api
