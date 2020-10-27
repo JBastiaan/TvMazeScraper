@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using TvMazeScraper.Persistance;
 using TvMazeScraper.Scraper.Clients;
+using TvMazeScraper.Scraper.Repositories;
 
 namespace TvMazeScraper.Scraper
 {
@@ -15,7 +16,9 @@ namespace TvMazeScraper.Scraper
             //setup our DI
             var services = new ServiceCollection();
             services
-                .AddTransient<IScraper, Scraper>()
+                .AddTransient<ITvMazeScraper, TvMazeScraper>()
+                .AddTransient<IShowRepository, ShowRepository>()
+                .AddScoped<TvMazeScraperContext>()
                 .AddAutoMapper(typeof(Program).Assembly)
                 .AddHttpClient(
                     nameof(TvMazeClient),
@@ -30,10 +33,8 @@ namespace TvMazeScraper.Scraper
             
             var provider = services.BuildServiceProvider();
 
-            var scraper = provider.GetService<IScraper>();
+            var scraper = provider.GetService<ITvMazeScraper>();
 
-            await scraper.ScrapeAsync();
-            
 
             var context = new TvMazeScraperContext();
 
@@ -42,17 +43,8 @@ namespace TvMazeScraper.Scraper
 
             await TvMazeScraperContextSeeder.Seed(context);
 
-            Console.WriteLine("Database created");
-            Console.WriteLine();
-
-
-
-
-
-            context.SaveChanges();
-
-            Console.WriteLine("Saved changes");
-            Console.WriteLine();
+            await scraper.ScrapeAsync();
+            
 
             Console.ReadKey();
 

@@ -2,7 +2,7 @@
 
 namespace TvMazeScraper.Scraper
 {
-    public interface IScraper
+    public interface ITvMazeScraper
     {
         Task ScrapeAsync();
     }

@@ -2,7 +2,7 @@
 
 namespace TvMazeScraper.Scraper.Exceptions
 {
-    public class ApiException : Exception
+    public class ApiCallException : Exception
     {
     }
 }

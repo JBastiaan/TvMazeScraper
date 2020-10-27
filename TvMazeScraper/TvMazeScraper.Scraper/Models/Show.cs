@@ -6,6 +6,6 @@ namespace TvMazeScraper.Scraper.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Actor> Actors { get; set; }
+        public IEnumerable<Actor> Cast { get; set; }
     }
 }

@@ -12,13 +12,18 @@ namespace TvMazeScraper.Persistance
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Many to many relationships require some additional configuration in EF Core since a join entity is needed for now
-            modelBuilder.Entity<ShowActor>()
+            modelBuilder
+                .Entity<ShowActor>()
                 .HasKey(sa => new { sa.ShowId, sa.ActorId });
-            modelBuilder.Entity<ShowActor>()
+            
+            modelBuilder
+                .Entity<ShowActor>()
                 .HasOne(sa => sa.Show)
                 .WithMany(show => show.ShowActors)
                 .HasForeignKey(sa => sa.ShowId);
-            modelBuilder.Entity<ShowActor>()
+            
+            modelBuilder
+                .Entity<ShowActor>()
                 .HasOne(sa => sa.Actor)
                 .WithMany(actor => actor.ShowActors)
                 .HasForeignKey(actor => actor.ActorId);

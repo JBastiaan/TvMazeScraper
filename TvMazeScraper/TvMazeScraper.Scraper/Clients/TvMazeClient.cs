@@ -30,11 +30,28 @@ namespace TvMazeScraper.Scraper.Clients
                 return JsonConvert.DeserializeObject<IEnumerable<Show>>(await httpResponse.Content.ReadAsStringAsync());
             }
 
-            return httpResponse.StatusCode switch
+            if (httpResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                HttpStatusCode.NotFound => new List<Show>(),
-                _ => throw new ApiException()
-            };
+                return new List<Show>();
+            }
+
+            //Todo: implement logging
+            throw new ApiCallException();
+        }
+
+        public async Task<IEnumerable<Actor>> GetCastAsync(int showId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"shows/{showId}/cast");
+            var httpResponse = await _client.SendAsync(request);
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                return JsonConvert
+                    .DeserializeObject<IEnumerable<Actor>>(await httpResponse.Content.ReadAsStringAsync());
+            }
+
+            //Todo: implement logging
+            throw new ApiCallException();
         }
 
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
