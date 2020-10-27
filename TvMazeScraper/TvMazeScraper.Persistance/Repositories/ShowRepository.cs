@@ -27,11 +27,17 @@ namespace TvMazeScraper.Persistance.Repositories
 
         public async Task<IEnumerable<Show>> GetShowsAsync(int pageIndex)
         {
-            return await _context
+            IQueryable<Show> query = _context
                 .Shows
                 .Include(show => show.ShowActors)
-                .ThenInclude(sa => sa.Actor)
-                .Skip(pageIndex * MaxPageSize)
+                .ThenInclude(sa => sa.Actor);
+
+            if (pageIndex > 1)
+            {
+                query = query.Skip(pageIndex - 1 * MaxPageSize);
+            }
+
+            return await query
                 .Take(MaxPageSize)
                 .AsNoTracking()
                 .ToListAsync();

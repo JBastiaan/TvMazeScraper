@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,7 @@ namespace TvMazeScraper.Api
                 .AddControllers();
 
             services
+                .AddAutoMapper(typeof(Startup).Assembly)
                 .AddRepositories()
                 .AddScraperContext(ApiConfiguration.ConnectionStrings.TvMazeScraperDb);
         }
