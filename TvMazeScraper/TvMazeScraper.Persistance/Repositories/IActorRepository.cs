@@ -6,6 +6,6 @@ namespace TvMazeScraper.Persistance.Repositories
 {
     public interface IActorRepository
     {
-        Task AddActorsAsync(IEnumerable<Actor> actors);
+        Task AddActorsAsync(IEnumerable<Actor> newActors);
     }
 }

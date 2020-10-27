@@ -43,11 +43,18 @@ namespace TvMazeScraper.Persistance.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddShowsAsync(IEnumerable<Show> shows)
+        public async Task AddShowsAsync(IEnumerable<Show> newShows)
         {
+            var showsToAdd = new List<Show>();
+
+            foreach (var show in newShows.Where(newShow => !_context.Shows.Any(show => show.Id == newShow.Id)))
+            {
+                showsToAdd.Add(show);
+            }
+
             await _context
                 .Shows
-                .AddRangeAsync(shows);
+                .AddRangeAsync(showsToAdd);
         }
 
         public async Task<int> SaveChangesAsync()

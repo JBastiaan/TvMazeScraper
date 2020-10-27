@@ -67,28 +67,29 @@ namespace TvMazeScraper.Scraper
                         _logger.LogInformation($"Retrieving cast for show '{show.Name}'");
                         var cast = await _client.GetCastAsync(show.Id);
 
-                        personsToAdd.AddRange(cast.Select(c => c.PersonDto));
+                        personsToAdd.AddRange(cast.Select(c => c.Person));
 
                         //1 actor can play as multiple characters
-                        show.Cast = cast.Select(actor => actor.PersonDto).Distinct().ToList();
+                        show.Cast = cast.Select(actor => actor.Person).Distinct().ToList();
                         showsToAdd.Add(show);
                     }
                 }
 
                 _logger.LogInformation($"Persisting new shows for page {pageIndex}");
 
+                var showEntities = _mapper.Map<IEnumerable<Show>>(showsToAdd);
                 await _showRepository
-                    .AddShowsAsync(_mapper.Map<IEnumerable<Show>>(showsToAdd));
+                    .AddShowsAsync(showEntities);
 
+
+                var personEntities = _mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct());
                 await _actorRepository
-                    .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct()));
+                    .AddActorsAsync(personEntities);
 
                 await _showRepository.SaveChangesAsync();
 
                 pageIndex++;
             }
-
-
         }
 
         private async Task<int> GetLatestShowIdAsync()

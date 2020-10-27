@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TvMazeScraper.Persistance.Entities;
 
@@ -13,11 +14,16 @@ namespace TvMazeScraper.Persistance.Repositories
             _context = context;
         }
 
-        public async Task AddActorsAsync(IEnumerable<Actor> actors)
+        public async Task AddActorsAsync(IEnumerable<Actor> newActors)
         {
-            await _context
-                .Actors
-                .AddRangeAsync(actors);
+            var actorsToAdd = new List<Actor>();
+            
+            foreach (var actor in newActors.Where(newActor => !_context.Actors.Any(actor => actor.Id == newActor.Id)))
+            {
+                actorsToAdd.Add(actor);
+            }
+
+            await _context.AddRangeAsync(actorsToAdd);
         }
     }
 }
