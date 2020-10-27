@@ -20,19 +20,19 @@ namespace TvMazeScraper.Scraper.Clients
             _client = client;
         }
 
-        public async Task<List<Show>> GetShowsAsync(int pagenumber)
+        public async Task<List<ShowDto>> GetShowsAsync(int pagenumber)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"shows?page={pagenumber}");
             var httpResponse = await _client.SendAsync(request);
 
             if (httpResponse.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<List<Show>>(await httpResponse.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<List<ShowDto>>(await httpResponse.Content.ReadAsStringAsync());
             }
 
             if (httpResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                return new List<Show>();
+                return new List<ShowDto>();
             }
 
             //Todo: implement logging

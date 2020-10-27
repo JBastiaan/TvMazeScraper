@@ -6,7 +6,7 @@ namespace TvMazeScraper.Scraper.Clients
 {
     public interface ITvMazeClient
     {
-        Task<List<Show>> GetShowsAsync(int pagenumber);
+        Task<List<ShowDto>> GetShowsAsync(int pagenumber);
         Task<List<Actor>> GetCastAsync(int showId);
     }
 }

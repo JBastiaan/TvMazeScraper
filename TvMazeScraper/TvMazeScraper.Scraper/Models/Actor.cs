@@ -2,6 +2,6 @@
 {
     public class Actor
     {
-        public Person Person { get; set; }
+        public PersonDto PersonDto { get; set; }
     }
 }

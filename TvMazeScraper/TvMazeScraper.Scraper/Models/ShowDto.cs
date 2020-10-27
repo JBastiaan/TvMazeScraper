@@ -2,10 +2,10 @@
 
 namespace TvMazeScraper.Scraper.Models
 {
-    public class Show
+    public class ShowDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Person> Cast { get; set; }
+        public ICollection<PersonDto> Cast { get; set; }
     }
 }

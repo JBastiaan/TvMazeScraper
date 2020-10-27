@@ -12,21 +12,21 @@ namespace TvMazeScraper.Scraper.Mapping
     {
         public ModelToEntityProfile()
         {
-            CreateMap<Models.Show, Show>()
+            CreateMap<Models.ShowDto, Show>()
                 .ForMember(
                     show => show.ShowActors, 
                     opt => opt.MapFrom(source => source));
 
-            CreateMap<Models.Show, IEnumerable<ShowActor>>()
+            CreateMap<Models.ShowDto, IEnumerable<ShowActor>>()
                 .ConvertUsing<ShowToShowActorsConverter>();
 
-            CreateMap<Models.Person, Persistance.Entities.Actor>();
+            CreateMap<Models.PersonDto, Persistance.Entities.Actor>();
         }
     }
 
-    public class PersonToActorConverter : ITypeConverter<Models.Person, Persistance.Entities.Actor>
+    public class PersonToActorConverter : ITypeConverter<Models.PersonDto, Persistance.Entities.Actor>
     {
-        public Persistance.Entities.Actor Convert(Person source, Persistance.Entities.Actor destination, ResolutionContext context)
+        public Persistance.Entities.Actor Convert(PersonDto source, Persistance.Entities.Actor destination, ResolutionContext context)
         {
             return new Persistance.Entities.Actor
             {
@@ -37,9 +37,9 @@ namespace TvMazeScraper.Scraper.Mapping
         }
     }
 
-    public class ShowToShowActorsConverter : ITypeConverter<Models.Show, IEnumerable<ShowActor>>
+    public class ShowToShowActorsConverter : ITypeConverter<Models.ShowDto, IEnumerable<ShowActor>>
     {
-        public IEnumerable<ShowActor> Convert(Models.Show source, IEnumerable<ShowActor> destination, ResolutionContext context)
+        public IEnumerable<ShowActor> Convert(Models.ShowDto source, IEnumerable<ShowActor> destination, ResolutionContext context)
         {
             return source
                 .Cast

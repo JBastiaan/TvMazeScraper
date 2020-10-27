@@ -46,8 +46,8 @@ namespace TvMazeScraper.Scraper
                 pageIndex++;
             }
 
-            var showsToAdd = new List<Models.Show>();
-            var personsToAdd = new List<Models.Person>();
+            var showsToAdd = new List<Models.ShowDto>();
+            var personsToAdd = new List<Models.PersonDto>();
             while (true)
             {
                 _logger.LogInformation($"Retrieving shows for page {pageIndex}");
@@ -65,26 +65,28 @@ namespace TvMazeScraper.Scraper
                         _logger.LogInformation($"Retrieving cast for show '{show.Name}'");
                         var cast = await _client.GetCastAsync(show.Id);
 
-                        personsToAdd.AddRange(cast.Select(c => c.Person));
+                        personsToAdd.AddRange(cast.Select(c => c.PersonDto));
 
                         //1 actor can play as multiple characters
-                        show.Cast = cast.Select(actor => actor.Person).Distinct().ToList();
+                        show.Cast = cast.Select(actor => actor.PersonDto).Distinct().ToList();
                         showsToAdd.Add(show);
                     }
                 }
 
+                _logger.LogInformation($"Persisting new shows for page {pageIndex}");
+
+                await _showRepository
+                    .AddShowsAsync(_mapper.Map<IEnumerable<Show>>(showsToAdd));
+
+                await _actorRepository
+                    .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct()));
+
+                await _showRepository.SaveChangesAsync();
+
                 pageIndex++;
             }
 
-            _logger.LogInformation("Persisting new shows...");
 
-            await _showRepository
-                .AddShowsAsync(_mapper.Map<IEnumerable<Show>>(showsToAdd));
-
-            await _actorRepository
-                .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct()));
-
-            await _showRepository.SaveChangesAsync();
         }
 
         private async Task<int> GetLatestShowIdAsync()

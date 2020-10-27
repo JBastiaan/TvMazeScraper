@@ -3,30 +3,30 @@
 namespace TvMazeScraper.Scraper.Models
 {
 
-    public class Person : IEquatable<Person>
+    public class PersonDto : IEquatable<PersonDto>
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime? Birthday { get; set; }
 
-        public bool Equals(Person x, Person y)
+        public bool Equals(PersonDto x, PersonDto y)
         {
             return Equals(x?.Id, y?.Id);
         }
 
-        public int GetHashCode(Person obj)
+        public int GetHashCode(PersonDto obj)
         {
             return obj.Id.GetHashCode();
         }
 
-        public bool Equals(Person other)
+        public bool Equals(PersonDto other)
         {
             return Id == other?.Id ;
         }
 
         public override bool Equals(object obj)
         {
-            return Equals((Person) obj);
+            return Equals((PersonDto) obj);
         }
 
         public override int GetHashCode()
