@@ -7,6 +7,6 @@ namespace TvMazeScraper.Persistance.Entities
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public IEnumerable<ShowActor> ShowActors { get; set; }
+        public ICollection<ShowActor> ShowActors { get; set; }
     }
 }

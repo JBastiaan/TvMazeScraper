@@ -59,19 +59,20 @@ namespace TvMazeScraper.Scraper
                         var cast = await _client.GetCastAsync(show.Id);
 
                         personsToAdd.AddRange(cast.Select(c => c.Person));
+
+                        show.Cast = cast;
                         showsToAdd.Add(show);
                     }
                 }
 
                 pageIndex++;
-                //break;
             }
 
             await _showRepository
                 .AddShowsAsync(_mapper.Map<IEnumerable<Show>>(showsToAdd));
 
             await _actorRepository
-                .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd));
+                .AddActorsAsync(_mapper.Map<IEnumerable<Actor>>(personsToAdd.Distinct()));
 
             await _showRepository.SaveChangesAsync();
         }

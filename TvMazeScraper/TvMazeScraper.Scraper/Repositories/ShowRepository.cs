@@ -48,9 +48,11 @@ namespace TvMazeScraper.Scraper.Repositories
             try
             {
                 //https://docs.microsoft.com/en-us/ef/core/saving/explicit-values-generated-properties#saving-an-explicit-value-during-add
-                await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows ON");
+                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows ON");
+                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actors ON");
                 affectedRows = await _context.SaveChangesAsync();
-                await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows OFF");
+                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Shows OFF");
+                //await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actors OFF");
             }
             finally
             {

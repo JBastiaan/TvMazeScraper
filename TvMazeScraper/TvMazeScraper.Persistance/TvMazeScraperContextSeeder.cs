@@ -6,6 +6,7 @@ namespace TvMazeScraper.Persistance
     {
         public static async Task Seed(TvMazeScraperContext context)
         {
+            await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
         }
     }

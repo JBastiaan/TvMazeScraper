@@ -18,6 +18,7 @@ namespace TvMazeScraper.Scraper
             services
                 .AddTransient<ITvMazeScraper, TvMazeScraper>()
                 .AddTransient<IShowRepository, ShowRepository>()
+                .AddTransient<IActorRepository, ActorRepository>()
                 .AddScoped<TvMazeScraperContext>()
                 .AddAutoMapper(typeof(Program).Assembly)
                 .AddHttpClient(

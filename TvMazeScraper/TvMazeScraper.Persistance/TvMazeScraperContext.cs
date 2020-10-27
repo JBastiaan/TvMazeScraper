@@ -11,22 +11,40 @@ namespace TvMazeScraper.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Many to many relationships require some additional configuration in EF Core since a join entity is needed for now
-            modelBuilder
-                .Entity<ShowActor>()
-                .HasKey(sa => new { sa.ShowId, sa.ActorId });
+            modelBuilder.Entity<ShowActor>()
+                .HasKey(sp => new { sp.ShowId, sp.ActorId });
+
+            modelBuilder.Entity<Show>()
+                .HasKey("Id");
+
+            modelBuilder.Entity<Show>()
+                .Property(s => s.Id)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<Actor>()
+                .HasKey("Id");
+
+            modelBuilder.Entity<Actor>()
+                .Property(c => c.Id)
+                .ValueGeneratedNever();
+
+
+            ////Many to many relationships require some additional configuration in EF Core since a join entity is needed for now
+            //modelBuilder
+            //    .Entity<ShowActor>()
+            //    .HasKey(sa => new { sa.ShowId, sa.ActorId });
             
-            modelBuilder
-                .Entity<ShowActor>()
-                .HasOne(sa => sa.Show)
-                .WithMany(show => show.ShowActors)
-                .HasForeignKey(sa => sa.ShowId);
+            //modelBuilder
+            //    .Entity<ShowActor>()
+            //    .HasOne(sa => sa.Show)
+            //    .WithMany(show => show.ShowActors)
+            //    .HasForeignKey(sa => sa.ShowId);
             
-            modelBuilder
-                .Entity<ShowActor>()
-                .HasOne(sa => sa.Actor)
-                .WithMany(actor => actor.ShowActors)
-                .HasForeignKey(actor => actor.ActorId);
+            //modelBuilder
+            //    .Entity<ShowActor>()
+            //    .HasOne(sa => sa.Actor)
+            //    .WithMany(actor => actor.ShowActors)
+            //    .HasForeignKey(actor => actor.ActorId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -20,14 +20,14 @@ namespace TvMazeScraper.Scraper.Clients
             _client = client;
         }
 
-        public async Task<IEnumerable<Show>> GetShowsAsync(int pagenumber)
+        public async Task<List<Show>> GetShowsAsync(int pagenumber)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"shows?page={pagenumber}");
             var httpResponse = await _client.SendAsync(request);
 
             if (httpResponse.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<IEnumerable<Show>>(await httpResponse.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<List<Show>>(await httpResponse.Content.ReadAsStringAsync());
             }
 
             if (httpResponse.StatusCode == HttpStatusCode.NotFound)
@@ -39,7 +39,7 @@ namespace TvMazeScraper.Scraper.Clients
             throw new ApiCallException();
         }
 
-        public async Task<IEnumerable<Actor>> GetCastAsync(int showId)
+        public async Task<List<Actor>> GetCastAsync(int showId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"shows/{showId}/cast");
             var httpResponse = await _client.SendAsync(request);
@@ -47,7 +47,7 @@ namespace TvMazeScraper.Scraper.Clients
             if (httpResponse.IsSuccessStatusCode)
             {
                 return JsonConvert
-                    .DeserializeObject<IEnumerable<Actor>>(await httpResponse.Content.ReadAsStringAsync());
+                    .DeserializeObject<List<Actor>>(await httpResponse.Content.ReadAsStringAsync());
             }
 
             //Todo: implement logging
