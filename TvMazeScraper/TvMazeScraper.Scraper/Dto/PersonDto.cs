@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TvMazeScraper.Scraper.Models
+namespace TvMazeScraper.Scraper.Dto
 {
 
     public class PersonDto : IEquatable<PersonDto>

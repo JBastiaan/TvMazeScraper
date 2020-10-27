@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using TvMazeScraper.Persistance.Entities;
 using TvMazeScraper.Persistance.Repositories;
 using TvMazeScraper.Scraper.Clients;
+using TvMazeScraper.Scraper.Dto;
+using Actor = TvMazeScraper.Persistance.Entities.Actor;
 using Show = TvMazeScraper.Persistance.Entities.Show;
 
 namespace TvMazeScraper.Scraper
@@ -46,8 +47,8 @@ namespace TvMazeScraper.Scraper
                 pageIndex++;
             }
 
-            var showsToAdd = new List<Models.ShowDto>();
-            var personsToAdd = new List<Models.PersonDto>();
+            var showsToAdd = new List<ShowDto>();
+            var personsToAdd = new List<PersonDto>();
             while (true)
             {
                 _logger.LogInformation($"Retrieving shows for page {pageIndex}");
@@ -55,6 +56,7 @@ namespace TvMazeScraper.Scraper
 
                 if (!shows.Any())
                 {
+                    _logger.LogInformation($"No shows found on page {pageIndex}");
                     break;
                 }
 

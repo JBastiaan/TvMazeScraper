@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TvMazeScraper.Scraper.Models
+namespace TvMazeScraper.Scraper.Dto
 {
     public class ShowDto
     {

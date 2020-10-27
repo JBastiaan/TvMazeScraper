@@ -2,33 +2,32 @@
 using System.Linq;
 using AutoMapper;
 using TvMazeScraper.Persistance.Entities;
-using TvMazeScraper.Scraper.Models;
-using Actor = TvMazeScraper.Scraper.Models.Actor;
+using TvMazeScraper.Scraper.Dto;
 using Show = TvMazeScraper.Persistance.Entities.Show;
 
 namespace TvMazeScraper.Scraper.Mapping
 {
-    public class ModelToEntityProfile : Profile
+    public class DtoToEntityProfile : Profile
     {
-        public ModelToEntityProfile()
+        public DtoToEntityProfile()
         {
-            CreateMap<Models.ShowDto, Show>()
+            CreateMap<ShowDto, Show>()
                 .ForMember(
                     show => show.ShowActors, 
                     opt => opt.MapFrom(source => source));
 
-            CreateMap<Models.ShowDto, IEnumerable<ShowActor>>()
+            CreateMap<ShowDto, IEnumerable<ShowActor>>()
                 .ConvertUsing<ShowToShowActorsConverter>();
 
-            CreateMap<Models.PersonDto, Persistance.Entities.Actor>();
+            CreateMap<PersonDto, Actor>();
         }
     }
 
-    public class PersonToActorConverter : ITypeConverter<Models.PersonDto, Persistance.Entities.Actor>
+    public class PersonToActorConverter : ITypeConverter<PersonDto, Actor>
     {
-        public Persistance.Entities.Actor Convert(PersonDto source, Persistance.Entities.Actor destination, ResolutionContext context)
+        public Actor Convert(PersonDto source, Actor destination, ResolutionContext context)
         {
-            return new Persistance.Entities.Actor
+            return new Actor
             {
                 Id = source.Id,
                 Name = source.Name,
@@ -37,9 +36,9 @@ namespace TvMazeScraper.Scraper.Mapping
         }
     }
 
-    public class ShowToShowActorsConverter : ITypeConverter<Models.ShowDto, IEnumerable<ShowActor>>
+    public class ShowToShowActorsConverter : ITypeConverter<ShowDto, IEnumerable<ShowActor>>
     {
-        public IEnumerable<ShowActor> Convert(Models.ShowDto source, IEnumerable<ShowActor> destination, ResolutionContext context)
+        public IEnumerable<ShowActor> Convert(ShowDto source, IEnumerable<ShowActor> destination, ResolutionContext context)
         {
             return source
                 .Cast

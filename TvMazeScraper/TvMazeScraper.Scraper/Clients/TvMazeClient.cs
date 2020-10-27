@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Extensions.Http;
+using TvMazeScraper.Scraper.Dto;
 using TvMazeScraper.Scraper.Exceptions;
-using TvMazeScraper.Scraper.Models;
 
 namespace TvMazeScraper.Scraper.Clients
 {
@@ -39,7 +39,7 @@ namespace TvMazeScraper.Scraper.Clients
             throw new ApiCallException();
         }
 
-        public async Task<List<Actor>> GetCastAsync(int showId)
+        public async Task<List<ActorDto>> GetCastAsync(int showId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"shows/{showId}/cast");
             var httpResponse = await _client.SendAsync(request);
@@ -47,7 +47,7 @@ namespace TvMazeScraper.Scraper.Clients
             if (httpResponse.IsSuccessStatusCode)
             {
                 return JsonConvert
-                    .DeserializeObject<List<Actor>>(await httpResponse.Content.ReadAsStringAsync());
+                    .DeserializeObject<List<ActorDto>>(await httpResponse.Content.ReadAsStringAsync());
             }
 
             //Todo: implement logging
